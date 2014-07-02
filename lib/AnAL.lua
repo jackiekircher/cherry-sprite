@@ -101,6 +101,44 @@ function newAnimationFromRow(image, fw, fh, delay, row)
 	return setmetatable(a, animation)
 end
 
+--- Create a new animation
+-- Replaces love.graphics.newAnimation
+-- @param image The image that contains the frames
+-- @param fw The frame width
+-- @param fh The frame height
+-- @param delay The delay between two frames
+-- @param frames The number of frames, 0 for autodetect
+-- @return The created animation
+function newAnimationFromTable(t)
+	local a = {}
+	a.img       = t.image
+	a.frames    = {}
+	a.delays    = {}
+	a.timer     = 0
+	a.position  = 1
+	a.fw        = t.frameWidth
+	a.fh        = t.frameHeight
+	a.playing   = true
+	a.speed     = 1
+	a.mode      = 1
+	a.direction = 1
+
+	local imgw = a.img:getWidth()
+	local imgh = a.img:getHeight()
+
+  for i = t.startRow-1, t.endRow-1 do
+    for j = t.startCol-1, t.endCol-1 do
+      local frame = love.graphics.newQuad(j*a.fw, i*a.fh,
+                                            a.fw, a.fh,
+                                            imgw, imgh)
+      table.insert(a.frames, frame)
+      table.insert(a.delays, t.delay)
+    end
+  end
+
+	return setmetatable(a, animation)
+end
+
 --- Update the animation
 -- @param dt Time that has passed since last call
 function animation:update(dt)
