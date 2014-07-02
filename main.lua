@@ -1,4 +1,6 @@
 require("AnAL")
+require("keyboard")
+require("camera")
 
 function love.load()
   love.graphics.setBackgroundColor(255, 255, 255)
@@ -7,6 +9,7 @@ function love.load()
   local spriteSize = 96
   framesPerSecond  = 10
   speed = 1
+  zoom  = 1
 
   animations = {}
   for i = 1, sprite:getHeight() / spriteSize do
@@ -30,16 +33,12 @@ function love.update(dt)
 end
 
 function love.draw()
+  camera:set()
+
   for i, animation in ipairs(animations) do
     local yPos = (i - 1) * 96
     animation:draw(0, yPos)
   end
-end
 
-function love.keypressed(key)
-  if key == "up" then
-    speed = speed + 0.5
-  elseif key == "down" then
-    speed = math.max(0, speed - 0.5)
-  end
+  camera:unset()
 end
