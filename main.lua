@@ -45,6 +45,12 @@ function loadSpriteFile(spriteFile, configFile)
                             endCol      = config[i][5] })
   end
 
+  -- set global values for sprite information
+  -- right now the format of the sprite file depends on each sprite
+  -- having the same dimensions
+  spriteWidth  = config[1][1]
+  spriteHeight = config[1][2]
+
   return sprites
 end
 
@@ -66,9 +72,11 @@ end
 function love.draw()
   camera:set()
 
+  local centerY = love.window.getHeight()/2 - (#animations * spriteHeight)/2
+  local centerX = love.window.getWidth()/2 - spriteWidth/2
   for i, animation in ipairs(animations) do
-    local yPos = (i - 1) * animation.fh
-    animation:draw(0, yPos)
+    local yPos = centerY + ((i-1)*animation.fh)
+    animation:draw(centerX, yPos)
   end
 
   camera:unset()
