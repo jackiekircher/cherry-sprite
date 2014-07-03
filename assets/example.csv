@@ -1,4 +1,4 @@
-frameWidth,frameHeight,delay
+frameWidth,frameHeight,framesPerSecond
 frameName,startRow,startCol,endRow,endCol
 frameName,startRow,startCol,endRow,endCol
 frameName,startRow,startCol,endRow,endCol
