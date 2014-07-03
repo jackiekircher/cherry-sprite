@@ -13,11 +13,7 @@ end
 
 function love.keypressed(key)
 
-  if key == "=" and keyModifier("shift") then
-    camera:scale(1.1)
-  elseif key == "-" then
-    camera:scale(0.9)
-  elseif key == "r" then
+  if key == "r" then
     camera:setScale(1, 1)
   end
 

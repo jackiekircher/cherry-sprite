@@ -7,8 +7,6 @@ require("keyboard")
 function love.load()
   love.graphics.setBackgroundColor(255, 255, 255)
 
-  zoom = 1
-
   -- read sprites by config file
   local sprites, framesPerSecond = loadSpriteFile("assets/spin_drive_96x96.png",
                                                   "assets/spin_drive_96x96_config.csv")
@@ -36,7 +34,7 @@ function love.load()
   fpsText:SetText("FPS (" .. framesPerSecond .. ")")
 
   local fpsSlider = loveframes.Create("slider")
-  fpsSlider:SetPos(5,10)
+  fpsSlider:SetPos(10,10)
   fpsSlider:SetButtonSize(10,20)
   fpsSlider:SetWidth(240)
   fpsSlider:SetHeight(20)
@@ -49,6 +47,24 @@ function love.load()
     for _, animation in ipairs(animations) do
       animation:setSpeed(fps)
     end
+  end
+
+  local zoomText = loveframes.Create("text")
+  zoomText:SetPos(love.window.getWidth() - 160,35)
+  zoomText:SetText("zoom (100%)")
+
+  local zoomSlider = loveframes.Create("slider")
+  zoomSlider:SetPos(love.window.getWidth() - 250,10)
+  zoomSlider:SetButtonSize(10,20)
+  zoomSlider:SetWidth(240)
+  zoomSlider:SetHeight(20)
+  zoomSlider:SetMinMax(0,5)
+  zoomSlider:SetDecimals(3)
+  zoomSlider:SetValue(1)
+  zoomSlider.OnValueChanged = function(object, dt)
+    local zoom = object:GetValue()
+    zoomText:SetText("zoom (" .. zoom*100 .. "%)")
+    camera:setScale(zoom, zoom)
   end
 
 end
