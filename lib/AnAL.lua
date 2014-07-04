@@ -119,7 +119,7 @@ function newAnimationFromTable(t)
 	a.fw        = t.frameWidth
 	a.fh        = t.frameHeight
 	a.playing   = true
-	a.speed     = 1
+	a.speed     = t.speed
 	a.mode      = 1
 	a.direction = 1
 
@@ -132,7 +132,7 @@ function newAnimationFromTable(t)
                                             a.fw, a.fh,
                                             imgw, imgh)
       table.insert(a.frames, frame)
-      table.insert(a.delays, t.delay)
+      table.insert(a.delays, 1)
     end
   end
 

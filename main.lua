@@ -7,25 +7,25 @@ require("keyboard")
 
 function love.load()
   love.graphics.setBackgroundColor(255, 255, 255)
+  animations   = {}
+  spriteHeight = 0
+  spriteWidth  = 0
 
-  -- read sprites by config file
-  local sprites, fps = loadSpriteFile("assets/spin_drive_96x96.png",
-                                      "assets/spin_drive_96x96_config.csv")
-  animations = {}
-  for i = 1, #sprites do
-    table.insert(animations, newAnimationFromTable(sprites[i]))
-  end
-  for _, animation in ipairs(animations) do
-    animation:setSpeed(fps)
-  end
-
-  loadGui(fps)
+  loadGui()
 end
 
-function loadSpriteFile(spriteFile, configFile)
+-- function loadSpriteFile()
+-- spriteFile (string): the path to the sprite file to be loaded
+--
+-- This function loads the sprite file into the animations table which means
+-- it updates global state. spriteWidth and spriteHeight are also globally
+-- updated. The corresponding config file is determined based on path name
+-- (sprite_file.png -> sprite_file_config.csv)
+function loadSpriteFile(spriteFile)
+  local configFile = spriteFile:gsub(".png", "_config.csv")
+
   local img     = love.graphics.newImage(spriteFile)
   local config  = readCSV(configFile, ',')
-  local fps     = config[1][3]
   local sprites = {}
 
   for i = 2, #config do
@@ -33,7 +33,7 @@ function loadSpriteFile(spriteFile, configFile)
                             image       = img,
                             frameWidth  = config[1][1],
                             frameHeight = config[1][2],
-                            delay       = 1,
+                            speed       = config[1][3],
                             startRow    = config[i][2],
                             startCol    = config[i][3],
                             endRow      = config[i][4],
@@ -45,8 +45,12 @@ function loadSpriteFile(spriteFile, configFile)
   -- having the same dimensions
   spriteWidth  = config[1][1]
   spriteHeight = config[1][2]
+  animations   = {}
+  for _, sprite in ipairs(sprites) do
+    table.insert(animations, newAnimationFromTable(sprite))
+  end
 
-  return sprites, fps
+  return { fps = config[1][3] }
 end
 
 function love.update(dt)
