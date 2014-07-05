@@ -1,7 +1,7 @@
-require("lib.anal")
+require("lib.AnAL")
 require("lib.camera")
 require("lib.csv")
-require("lib.loveframes")
+require("lib.LoveFrames")
 require("gui")
 require("keyboard")
 
