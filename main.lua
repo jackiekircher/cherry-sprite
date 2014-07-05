@@ -7,9 +7,9 @@ require("keyboard")
 
 function love.load()
   love.graphics.setBackgroundColor(255, 255, 255)
+  dragging     = { active = false, x = 0, y = 0 }
+  canvas       = { x = 0, y = 0 }
   animations   = {}
-  spriteHeight = 0
-  spriteWidth  = 0
 
   loadGui()
 end
@@ -43,11 +43,15 @@ function loadSpriteFile(spriteFile)
   -- set global values for sprite information
   -- right now the format of the sprite file depends on each sprite
   -- having the same dimensions
-  spriteWidth  = config[1][1]
-  spriteHeight = config[1][2]
+  local spriteWidth  = config[1][1]
+  local spriteHeight = config[1][2]
+
   animations   = {}
-  for _, sprite in ipairs(sprites) do
-    table.insert(animations, newAnimationFromTable(sprite))
+  for i, sprite in ipairs(sprites) do
+    local animation = newAnimationFromTable(sprite)
+    animation.x = love.window.getWidth()/2 - spriteWidth/2
+    animation.y = love.window.getHeight()/2 - (#sprites * spriteHeight)/2 + ((i-1)*animation.fh)
+    table.insert(animations, animation)
   end
 
   return { fps = config[1][3] }
@@ -63,23 +67,41 @@ end
 
 function love.draw()
   camera:set()
+  -- Adjust the main viewport when the mouse is held down
+  -- the mouse position is adjusted by (2 * initial canvas coord)
+  -- because it's in a different frame of reference.
+  -- Without this the canvas would be mirrored with every click,
+  -- it's dirty so if you know a better way please fix!
+  if dragging.active then
+    canvas.x = dragging.x - (love.mouse.getX() - dragging.sx)
+    canvas.y = dragging.y - (love.mouse.getY() - dragging.sy)
+    camera:setPosition(canvas.x, canvas.y)
+  end
 
-  local centerY = love.window.getHeight()/2 - (#animations * spriteHeight)/2
-  local centerX = love.window.getWidth()/2 - spriteWidth/2
   for i, animation in ipairs(animations) do
-    local yPos = centerY + ((i-1)*animation.fh)
-    animation:draw(centerX, yPos)
+    animation:draw(animation.x, animation.y)
   end
 
   camera:unset()
-
   loveframes.draw(dt)
 end
 
 function love.mousepressed(x, y, button)
+  if button == "l" then
+    dragging.active = true
+    dragging.sx     = 2*canvas.x
+    dragging.sy     = 2*canvas.y
+    dragging.x      = x - canvas.x
+    dragging.y      = y - canvas.y
+  end
+
   loveframes.mousepressed(x, y, button)
 end
 
 function love.mousereleased(x, y, button)
+  if button == "l" then
+    dragging.active = false
+  end
+
   loveframes.mousereleased(x, y, button)
 end
