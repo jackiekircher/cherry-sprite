@@ -9,8 +9,8 @@ camera = {
 function camera:set()
   love.graphics.push()
   love.graphics.rotate(-self.rotation)
-  love.graphics.scale(self.scaleX, self.scaleY)
   love.graphics.translate(-self.x, -self.y)
+  love.graphics.scale(self.scaleX, self.scaleY)
 end
 
 function camera:unset()
@@ -19,7 +19,7 @@ end
 
 function camera:move(dx, dy)
   self.x = self.x + (dx or 0)
-  sely.y = self.y + (dy or 0)
+  self.y = self.y + (dy or 0)
 end
 
 function camera:rotate(dr)
