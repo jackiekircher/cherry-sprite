@@ -10,8 +10,7 @@ function love.load()
   dragging     = { active = false, x = 0, y = 0 }
   canvas       = { x = 0, y = 0 }
   animations   = {}
-
-  loadGui()
+  gui          = loadGui()
 end
 
 -- function loadSpriteFile()

@@ -12,9 +12,17 @@ local function keyModifier(key)
 end
 
 function love.keypressed(key)
+  local zSlider = gui.zoom.slider
 
-  if key == "r" then
+  if key == "=" and keyModifier("shift") then
+    camera:scale(1.1)
+    zSlider:SetValue(zSlider:GetValue()*1.1)
+  elseif key == "-" then
+    camera:scale(0.9)
+    zSlider:SetValue(zSlider:GetValue()*0.9)
+  elseif key == "r" then
     camera:setScale(1, 1)
+    zSlider:SetValue(1)
   end
 
   loveframes.keypressed(key)

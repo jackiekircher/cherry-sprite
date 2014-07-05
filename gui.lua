@@ -66,6 +66,10 @@ function loadGui(fps)
     local config = loadSpriteFile(spriteDir .. "/" .. choice)
     fpsSlider:SetValue(config.fps)
   end
+
+  return { fps  = { slider = fpsSlider, text = fpsText },
+           zoom = { slider = zoomSlider, text = zoomext },
+           menu = fileList }
 end
 
 function detectSpriteFiles(dir)
