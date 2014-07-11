@@ -126,13 +126,27 @@ function newAnimationFromTable(t)
 	local imgw = a.img:getWidth()
 	local imgh = a.img:getHeight()
 
-  for i = t.startRow-1, t.endRow-1 do
-    for j = t.startCol-1, t.endCol-1 do
+  -- because image positions need to start at 0
+  -- we pretend Lua's 1-index is 0-indexed.
+  local startRow = t.startRow-1
+  local endRow   = t.endRow-1
+  local startCol = t.startCol-1
+  local endCol   = t.endCol-1
+
+  local spritesPerLine = imgw/a.fw - 1
+  -- raise error if sprtesPerLine is not an int?
+
+  for i = startRow, endRow do
+    for j = startCol, spritesPerLine do
       local frame = love.graphics.newQuad(j*a.fw, i*a.fh,
                                             a.fw, a.fh,
                                             imgw, imgh)
       table.insert(a.frames, frame)
       table.insert(a.delays, 1)
+
+      if (i == endRow) and j == (endCol) then
+        break
+      end
     end
   end
 
